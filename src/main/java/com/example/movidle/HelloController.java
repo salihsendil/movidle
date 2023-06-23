@@ -2,7 +2,6 @@ package com.example.movidle;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.*;
 
@@ -56,19 +55,10 @@ public class HelloController {
     HashMap<String, MovieListMovieInfo> movieList = new HashMap<>();
 
     @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
-
-    @FXML
-    private Button addButton;
+    private FlowPane answerPane;
 
     @FXML
     private Button clickButton;
-
-    @FXML
-    private FlowPane answerPane;
 
     @FXML
     private TextField input;
@@ -82,6 +72,8 @@ public class HelloController {
 
 
         // TODO: 22.06.2023 tahmin butonu kullanıldıktan sonra database ile iletişim sağlanıp veriye göre 6 adet buton oluşturulacak buton sayısı tablonun sütununa bağlanacak
+        // TODO: 23.06.2023 getinfo methodları kullanarak girilen veri ile kıyaslama yap
+        // TODO: 23.06.2023 textfield autocomple textfield 
         for (int i = 1; i <= 6; i++) {
             Button newButton = new Button("Yeni Buton " + i);
             newButton.setDisable(true);
@@ -106,6 +98,8 @@ public class HelloController {
 
 
     void readDatabase(Integer movieNumberKey) {
+        // TODO: 23.06.2023 büyük küçük harf uyumluluğu touppercase ve lowercase
+        // TODO: 23.06.2023 charset ayarla yabancı harfler için
         try {
             String filePath = "./imdb_top_250.csv";
             BufferedReader databaseReader = new BufferedReader(new FileReader(filePath));
