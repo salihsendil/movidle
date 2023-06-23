@@ -21,7 +21,7 @@
          </font>
       </Label>
       <Label fx:id="output" alignment="CENTER" layoutX="236.0" layoutY="169.0" prefHeight="31.0" prefWidth="129.0" text="Label" textAlignment="CENTER" />
-      <FlowPane fx:id="buttonContainer" layoutX="78.0" layoutY="243.0" prefHeight="113.0" prefWidth="444.0" style="-fx-background-color: red;">
+      <FlowPane fx:id="answerPane" layoutX="78.0" layoutY="243.0" prefHeight="113.0" prefWidth="444.0" style="-fx-background-color: red;">
          <children>
             <Button fx:id="addButton" mnemonicParsing="false" text="Button" textAlignment="CENTER" />
          </children>
