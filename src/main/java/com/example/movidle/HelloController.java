@@ -2,7 +2,6 @@ package com.example.movidle;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.net.URL;
 import java.util.*;
 
 import javafx.fxml.FXML;
@@ -11,22 +10,20 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 
-
 public class HelloController {
 
     static class MovieListMovieInfo {
         public String[] movieInfo;
-
         ///////////////////////////////////////////////////////////////////////////
         // static class constructor
         ///////////////////////////////////////////////////////////////////////////
-        public MovieListMovieInfo(String info1, String info2, String info3, String info4, String info5, String info6) {
+        public  MovieListMovieInfo(String info1, String info2, String info3, String info4, String info5, String info6) {
             movieInfo = new String[]{info1, info2, info3, info4, info5, info6};
         }
+
         ///////////////////////////////////////////////////////////////////////////
         // getter methodlar kullanılmayacaksa sil
         ///////////////////////////////////////////////////////////////////////////
-
         public String getInfo0() {
             return movieInfo[0];
         }
@@ -53,6 +50,8 @@ public class HelloController {
     }
 
     HashMap<String, MovieListMovieInfo> movieList = new HashMap<>();
+    int randomMovieNumberKey;
+    String userKey;
 
     @FXML
     private FlowPane answerPane;
@@ -68,17 +67,94 @@ public class HelloController {
 
     @FXML
     void clickedButton() {
-        output.setText(input.getText());
+
+        //output.setText(input.getText());
+        // TODO: 24.06.2023 değerlerin eşleşme durumunu for döngüsü ile yaz
+        String key = String.valueOf(randomMovieNumberKey);
+        MovieListMovieInfo movieInfo = movieList.get(key);
 
 
-        // TODO: 22.06.2023 tahmin butonu kullanıldıktan sonra database ile iletişim sağlanıp veriye göre 6 adet buton oluşturulacak buton sayısı tablonun sütununa bağlanacak
-        // TODO: 23.06.2023 getinfo methodları kullanarak girilen veri ile kıyaslama yap
-        // TODO: 23.06.2023 textfield autocomple textfield 
-        for (int i = 1; i <= 6; i++) {
-            Button newButton = new Button("Yeni Buton " + i);
-            newButton.setDisable(true);
+
+        // FIXME: 24.06.2023 büyük küçük harf duyarlılığı yok düzelt
+        String tempUserKey = input.getText();
+        movieList.forEach((s, movieNames) -> {
+            if(tempUserKey.equals(movieNames.getInfo0())){ userKey = s; }
+        });
+
+        MovieListMovieInfo userMovieInfo = movieList.get(userKey);
+
+        System.out.println(userMovieInfo.getInfo0());
+
+        if(userMovieInfo.getInfo0() == movieInfo.getInfo0()){
+            Button newButton = new Button(movieInfo.getInfo0());
+            //newButton.setDisable(true);
+            newButton.getStyleClass().clear();
+            newButton.setStyle("-fx-background-color: green");
             answerPane.getChildren().add(newButton);
         }
+        else {
+            System.out.println("boş");
+        }
+        if(userMovieInfo.getInfo1() == movieInfo.getInfo1()){
+            Button newButton = new Button(movieInfo.getInfo1());
+            //newButton.setDisable(true);
+            newButton.getStyleClass().clear();
+            newButton.setStyle("-fx-background-color: green");
+            answerPane.getChildren().add(newButton);
+        }
+        else {
+            System.out.println("boş");
+        }
+        if(userMovieInfo.getInfo2() == movieInfo.getInfo2()){
+            Button newButton = new Button(movieInfo.getInfo2());
+            //newButton.setDisable(true);
+            newButton.getStyleClass().clear();
+            newButton.setStyle("-fx-background-color: green");
+            answerPane.getChildren().add(newButton);
+        }
+        else {
+            System.out.println("boş");
+        }
+        if(userMovieInfo.getInfo3() == movieInfo.getInfo3()){
+            Button newButton = new Button(movieInfo.getInfo3());
+            //newButton.setDisable(true);
+            newButton.getStyleClass().clear();
+            newButton.setStyle("-fx-background-color: green");
+            answerPane.getChildren().add(newButton);
+        }
+        else {
+            System.out.println("boş");
+        }
+        if(userMovieInfo.getInfo4() == movieInfo.getInfo4()){
+            Button newButton = new Button(movieInfo.getInfo4());
+            //newButton.setDisable(true);
+            newButton.getStyleClass().clear();
+            newButton.setStyle("-fx-background-color: green");
+            answerPane.getChildren().add(newButton);
+        }
+        else {
+            System.out.println("boş");
+        }
+        if(userMovieInfo.getInfo5() == movieInfo.getInfo5()){
+            Button newButton = new Button(movieInfo.getInfo5());
+            //newButton.setDisable(true);
+            newButton.getStyleClass().clear();
+            newButton.setStyle("-fx-background-color: green");
+            answerPane.getChildren().add(newButton);
+        }
+        else {
+            System.out.println("boş");
+        }
+
+        // TODO: 22.06.2023 tahmin button kullanıldıktan sonra database ile iletişim sağlanıp veriye göre 6 adet buton oluşturulacak buton sayısı tablonun sütununa bağlanacak
+        // TODO: 23.06.2023 getinfo methodları kullanarak girilen veri ile kıyaslama yap
+        // TODO: 23.06.2023 textfield autocomple textfield
+
+       //for (int i = 1; i <= 6; i++) {
+       //    Button newButton = new Button("Yeni Buton " + i);
+       //    //newButton.setDisable(true);
+       //    answerPane.getChildren().add(newButton);
+       //}
     }
 
     @FXML
@@ -86,18 +162,18 @@ public class HelloController {
         assert clickButton != null : "fx:id=\"clickButton\" was not injected: check your FXML file 'hello-view.fxml'.";
         assert input != null : "fx:id=\"input\" was not injected: check your FXML file 'hello-view.fxml'.";
         assert output != null : "fx:id=\"output\" was not injected: check your FXML file 'hello-view.fxml'.";
-        readDatabase(randomNumberCreator());
+        randomNumberCreator();
+        readDatabase();
     }
 
-    int randomNumberCreator() {
+    void randomNumberCreator() {
         Random random = new Random();
-        int randomMovieNumber = random.nextInt(251);
-        return randomMovieNumber;
-
+        int randomNumber = random.nextInt(251);
+        randomMovieNumberKey = randomNumber;
     }
 
 
-    void readDatabase(Integer movieNumberKey) {
+    void readDatabase() {
         // TODO: 23.06.2023 büyük küçük harf uyumluluğu touppercase ve lowercase
         // TODO: 23.06.2023 charset ayarla yabancı harfler için
         try {
@@ -106,7 +182,7 @@ public class HelloController {
             String line;
             while ((line = databaseReader.readLine()) != null) {
                 String[] data = line.split(";");
-                String key = data[0]; // ilk sütun = key
+                String key = data[0]; // ilk sütun = gameKey
                 String info1 = data[1];
                 String info2 = data[2];
                 String info3 = data[3];
@@ -122,7 +198,7 @@ public class HelloController {
             ///////////////////////////////////////////////////////////////////////////
             // rastgele üretilen sayıya göre listeden bir film seçip konsola yazdır İŞİN BİTİNCE SİL
             ///////////////////////////////////////////////////////////////////////////
-            String key = movieNumberKey.toString();
+            String key = String.valueOf(randomMovieNumberKey);
             if (movieList.containsKey(key)) {
                 MovieListMovieInfo movieInfo = movieList.get(key);
                 System.out.println("Key: " + key);
