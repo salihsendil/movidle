@@ -20,10 +20,13 @@
             <Font name="Times New Roman" size="36.0" />
          </font>
       </Label>
-      <Label fx:id="output" alignment="CENTER" layoutX="236.0" layoutY="169.0" prefHeight="31.0" prefWidth="129.0" text="Label" textAlignment="CENTER" />
+      <Label fx:id="alertLabel" alignment="CENTER" layoutX="148.0" layoutY="146.0" prefHeight="32.0" prefWidth="305.0" text="Label" textAlignment="CENTER">
+         <font>
+            <Font name="Dubai Bold" size="18.0" />
+         </font></Label>
       <FlowPane fx:id="answerPane" layoutX="46.0" layoutY="242.0" prefHeight="113.0" prefWidth="508.0" style="-fx-background-color: white;">
          <children>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Button" />
+            <Button graphicTextGap="60.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Button" />
          </children></FlowPane>
    </children>
 </Pane>

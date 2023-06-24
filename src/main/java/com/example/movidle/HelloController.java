@@ -14,10 +14,11 @@ public class HelloController {
 
     static class MovieListMovieInfo {
         public String[] movieInfo;
+
         ///////////////////////////////////////////////////////////////////////////
         // static class constructor
         ///////////////////////////////////////////////////////////////////////////
-        public  MovieListMovieInfo(String info1, String info2, String info3, String info4, String info5, String info6) {
+        public MovieListMovieInfo(String info1, String info2, String info3, String info4, String info5, String info6) {
             movieInfo = new String[]{info1, info2, info3, info4, info5, info6};
         }
 
@@ -52,6 +53,8 @@ public class HelloController {
     HashMap<String, MovieListMovieInfo> movieList = new HashMap<>();
     int randomMovieNumberKey;
     String userKey;
+    String key;
+    boolean foundMatch;//eşleşme bulunup bulunmama durumu tutuluyor
 
     @FXML
     private FlowPane answerPane;
@@ -63,29 +66,46 @@ public class HelloController {
     private TextField input;
 
     @FXML
-    private Label output;
+    private Label alertLabel;
 
     @FXML
     void clickedButton() {
 
-        //output.setText(input.getText());
         // TODO: 24.06.2023 değerlerin eşleşme durumunu for döngüsü ile yaz
         String key = String.valueOf(randomMovieNumberKey);
         MovieListMovieInfo movieInfo = movieList.get(key);
-
+        this.key = key; //local variable ile method içi variable eşitlendi
+        foundMatch = false;
 
 
         // FIXME: 24.06.2023 büyük küçük harf duyarlılığı yok düzelt
         String tempUserKey = input.getText();
         movieList.forEach((s, movieNames) -> {
-            if(tempUserKey.equals(movieNames.getInfo0())){ userKey = s; }
+            if (tempUserKey.equals(movieNames.getInfo0())) {
+                userKey = s;
+                foundMatch = true;
+            }
         });
+        if (!foundMatch) {
+            alertLabel.setText("Girilen film sözlükte mevcut değil!");
+            userKey = null;
+            foundMatch = false;
+        }
 
-        MovieListMovieInfo userMovieInfo = movieList.get(userKey);
+        //MovieListMovieInfo userMovieInfo = movieList.get(userKey);
+        //System.out.println(userMovieInfo.getInfo0());
+        if (userKey != null) {
+            compareMovieNames();
+            compareMovieYears();
+            compareMovieGenres();
+            compareMovieOrigins();
+            compareMovieDirectors();
+            compareMovieStars();
+        }
 
-        System.out.println(userMovieInfo.getInfo0());
 
-        if(userMovieInfo.getInfo0() == movieInfo.getInfo0()){
+
+        /*if(userMovieInfo.getInfo0() == movieInfo.getInfo0()){
             Button newButton = new Button(movieInfo.getInfo0());
             //newButton.setDisable(true);
             newButton.getStyleClass().clear();
@@ -94,81 +114,33 @@ public class HelloController {
         }
         else {
             System.out.println("boş");
-        }
-        if(userMovieInfo.getInfo1() == movieInfo.getInfo1()){
-            Button newButton = new Button(movieInfo.getInfo1());
-            //newButton.setDisable(true);
-            newButton.getStyleClass().clear();
-            newButton.setStyle("-fx-background-color: green");
-            answerPane.getChildren().add(newButton);
-        }
-        else {
-            System.out.println("boş");
-        }
-        if(userMovieInfo.getInfo2() == movieInfo.getInfo2()){
-            Button newButton = new Button(movieInfo.getInfo2());
-            //newButton.setDisable(true);
-            newButton.getStyleClass().clear();
-            newButton.setStyle("-fx-background-color: green");
-            answerPane.getChildren().add(newButton);
-        }
-        else {
-            System.out.println("boş");
-        }
-        if(userMovieInfo.getInfo3() == movieInfo.getInfo3()){
-            Button newButton = new Button(movieInfo.getInfo3());
-            //newButton.setDisable(true);
-            newButton.getStyleClass().clear();
-            newButton.setStyle("-fx-background-color: green");
-            answerPane.getChildren().add(newButton);
-        }
-        else {
-            System.out.println("boş");
-        }
-        if(userMovieInfo.getInfo4() == movieInfo.getInfo4()){
-            Button newButton = new Button(movieInfo.getInfo4());
-            //newButton.setDisable(true);
-            newButton.getStyleClass().clear();
-            newButton.setStyle("-fx-background-color: green");
-            answerPane.getChildren().add(newButton);
-        }
-        else {
-            System.out.println("boş");
-        }
-        if(userMovieInfo.getInfo5() == movieInfo.getInfo5()){
-            Button newButton = new Button(movieInfo.getInfo5());
-            //newButton.setDisable(true);
-            newButton.getStyleClass().clear();
-            newButton.setStyle("-fx-background-color: green");
-            answerPane.getChildren().add(newButton);
-        }
-        else {
-            System.out.println("boş");
-        }
+        }*/
 
         // TODO: 22.06.2023 tahmin button kullanıldıktan sonra database ile iletişim sağlanıp veriye göre 6 adet buton oluşturulacak buton sayısı tablonun sütununa bağlanacak
         // TODO: 23.06.2023 getinfo methodları kullanarak girilen veri ile kıyaslama yap
         // TODO: 23.06.2023 textfield autocomple textfield
 
-       //for (int i = 1; i <= 6; i++) {
-       //    Button newButton = new Button("Yeni Buton " + i);
-       //    //newButton.setDisable(true);
-       //    answerPane.getChildren().add(newButton);
-       //}
+        /*for (int i = 1; i <= 6; i++) {
+        //    Button newButton = new Button("Yeni Buton " + i);
+        //    //newButton.setDisable(true);
+        //    answerPane.getChildren().add(newButton);
+        }*/
     }
 
     @FXML
     void initialize() {
         assert clickButton != null : "fx:id=\"clickButton\" was not injected: check your FXML file 'hello-view.fxml'.";
         assert input != null : "fx:id=\"input\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert output != null : "fx:id=\"output\" was not injected: check your FXML file 'hello-view.fxml'.";
+        assert alertLabel != null : "fx:id=\"output\" was not injected: check your FXML file 'hello-view.fxml'.";
         randomNumberCreator();
         readDatabase();
+
     }
 
     void randomNumberCreator() {
+        System.out.println(movieList.size());
         Random random = new Random();
-        int randomNumber = random.nextInt(251);
+        int randomNumber = random.nextInt(251);// TODO: 25.06.2023 sınırlamayı listenin uzunluğu ile değiştir +1 ekle
         randomMovieNumberKey = randomNumber;
     }
 
@@ -233,9 +205,90 @@ public class HelloController {
         }
     }
 
-    void removeTitleFromDatabase(){
+    void removeTitleFromDatabase() {
         movieList.remove("No");
     }
+
+    void compareMovieNames() {
+        if (movieList.get(key).getInfo0().equals(movieList.get(userKey).getInfo0())) {
+            Button trueButton = new Button(movieList.get(key).getInfo0());
+            trueButton.getStyleClass().clear();
+            trueButton.setStyle("-fx-background-color: green");
+            answerPane.getChildren().add(trueButton);
+        } else {
+            Button falseButton = new Button(movieList.get(userKey).getInfo0());
+            falseButton.getStyleClass().clear();
+            falseButton.setStyle("-fx-background-color: red");
+            answerPane.getChildren().add(falseButton);
+        }
+    }
+
+    void compareMovieYears() {
+        if (movieList.get(key).getInfo1().equals(movieList.get(userKey).getInfo1())) {
+            Button trueButton = new Button(movieList.get(key).getInfo1());
+            trueButton.getStyleClass().clear();
+            trueButton.setStyle("-fx-background-color: green");
+            answerPane.getChildren().add(trueButton);
+        } else {
+            Button falseButton = new Button(movieList.get(userKey).getInfo1());
+            falseButton.getStyleClass().clear();
+            falseButton.setStyle("-fx-background-color: red");
+            answerPane.getChildren().add(falseButton);
+        }
+    }
+    void compareMovieGenres() {
+        if (movieList.get(key).getInfo2().equals(movieList.get(userKey).getInfo2())) {
+            Button trueButton = new Button(movieList.get(key).getInfo2());
+            trueButton.getStyleClass().clear();
+            trueButton.setStyle("-fx-background-color: green");
+            answerPane.getChildren().add(trueButton);
+        } else {
+            Button falseButton = new Button(movieList.get(userKey).getInfo2());
+            falseButton.getStyleClass().clear();
+            falseButton.setStyle("-fx-background-color: red");
+            answerPane.getChildren().add(falseButton);
+        }
+    }
+    void compareMovieOrigins() {
+        if (movieList.get(key).getInfo3().equals(movieList.get(userKey).getInfo3())) {
+            Button trueButton = new Button(movieList.get(key).getInfo3());
+            trueButton.getStyleClass().clear();
+            trueButton.setStyle("-fx-background-color: green");
+            answerPane.getChildren().add(trueButton);
+        } else {
+            Button falseButton = new Button(movieList.get(userKey).getInfo3());
+            falseButton.getStyleClass().clear();
+            falseButton.setStyle("-fx-background-color: red");
+            answerPane.getChildren().add(falseButton);
+        }
+    }
+    void compareMovieDirectors() {
+        if (movieList.get(key).getInfo4().equals(movieList.get(userKey).getInfo4())) {
+            Button trueButton = new Button(movieList.get(key).getInfo3());
+            trueButton.getStyleClass().clear();
+            trueButton.setStyle("-fx-background-color: green");
+            answerPane.getChildren().add(trueButton);
+        } else {
+            Button falseButton = new Button(movieList.get(userKey).getInfo4());
+            falseButton.getStyleClass().clear();
+            falseButton.setStyle("-fx-background-color: red");
+            answerPane.getChildren().add(falseButton);
+        }
+    }
+    void compareMovieStars() {
+        if (movieList.get(key).getInfo5().equals(movieList.get(userKey).getInfo5())) {
+            Button trueButton = new Button(movieList.get(key).getInfo5());
+            trueButton.getStyleClass().clear();
+            trueButton.setStyle("-fx-background-color: green");
+            answerPane.getChildren().add(trueButton);
+        } else {
+            Button falseButton = new Button(movieList.get(userKey).getInfo5());
+            falseButton.getStyleClass().clear();
+            falseButton.setStyle("-fx-background-color: red");
+            answerPane.getChildren().add(falseButton);
+        }
+    }
+
 }
 
 
