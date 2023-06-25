@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.FlowPane;
 
 public class HelloController {
@@ -52,7 +53,6 @@ public class HelloController {
 
     @FXML
     void clickedButton() {
-
         // TODO: 24.06.2023 değerlerin eşleşme durumunu for döngüsü ile yaz
         String key = String.valueOf(randomMovieNumberKey);
         System.out.println(movieList.get(key).getInfoCounter());
@@ -100,43 +100,37 @@ public class HelloController {
     void readDatabase() throws IOException {
         // TODO: 23.06.2023 büyük küçük harf uyumluluğu touppercase ve lowercase
         // TODO: 23.06.2023 charset ayarla yabancı harfler için
-            String filePath = "./imdb_top_250.csv";
-            BufferedReader databaseReader = new BufferedReader(new FileReader(filePath));
-            String line;
-            while ((line = databaseReader.readLine()) != null) {
-                String[] data = line.split(";");
-                String key = data[0]; // ilk sütun = key
-                String info1 = data[1];
-                String info2 = data[2];
-                String info3 = data[3];
-                String info4 = data[4];
-                String info5 = data[5];
-                String info6 = data[6];
-                movieList.put(key, new MovieListMovieInfo(info1, info2, info3, info4, info5, info6));
-            }
-            removeTitleFromDatabase(); //liste okunduktan sonra tablonun başlıklarını sil
-            databaseReader.close();
+        String filePath = "./imdb_top_250.csv";
+        BufferedReader databaseReader = new BufferedReader(new FileReader(filePath));
+        String line;
+        while ((line = databaseReader.readLine()) != null) {
+            String[] data = line.split(";");
+            String key = data[0]; // ilk sütun = key
+            String info1 = data[1];
+            String info2 = data[2];
+            String info3 = data[3];
+            String info4 = data[4];
+            String info5 = data[5];
+            String info6 = data[6];
+            movieList.put(key, new MovieListMovieInfo(info1, info2, info3, info4, info5, info6));
+        }
+        removeTitleFromDatabase(); //liste okunduktan sonra tablonun başlıklarını sil
+        databaseReader.close();
 
-            ///////////////////////////////////////////////////////////////////////////
-            // rastgele üretilen sayıya göre listeden bir film seçip konsola yazdır İŞİN BİTİNCE SİL
-            ///////////////////////////////////////////////////////////////////////////
-            String key = String.valueOf(randomMovieNumberKey);
-            if (movieList.containsKey(key)) {
-                MovieListMovieInfo movieInfo = movieList.get(key);
-                System.out.println("Key: " + key);
-                for (int i = 0; i < movieInfo.getInfoCounter(); i++) {
-                    System.out.println("Info" + i + ": " + movieInfo.getInfo(i));
-                }
-
-            } else {
-                System.out.println("Belirtilen key bulunamadı.");
+        ///////////////////////////////////////////////////////////////////////////
+        // rastgele üretilen sayıya göre listeden bir film seçip konsola yazdır İŞİN BİTİNCE SİL
+        ///////////////////////////////////////////////////////////////////////////
+        String key = String.valueOf(randomMovieNumberKey);
+        if (movieList.containsKey(key)) {
+            MovieListMovieInfo movieInfo = movieList.get(key);
+            System.out.println("Key: " + key);
+            for (int i = 0; i < movieInfo.getInfoCounter(); i++) {
+                System.out.println("Info" + i + ": " + movieInfo.getInfo(i));
             }
 
-            ///////////////////////////////////////////////////////////////////////////
-            // okunan bütün listeyi yazdır İŞİN BİTİNCE SİL
-            ///////////////////////////////////////////////////////////////////////////
-
-
+        } else {
+            System.out.println("Belirtilen key bulunamadı.");
+        }
     }
 
     void removeTitleFromDatabase() {
@@ -144,20 +138,22 @@ public class HelloController {
     }
 
     void compareMovieInfo() {
-        for (int i = 0; i <= movieList.get(key).getInfoCounter(); i++) {
+        for (int i = 0; i < movieList.get(key).getInfoCounter(); i++) {
             if (movieList.get(key).getInfo(i).equals(movieList.get(userKey).getInfo(i))) {
                 Button trueButton = new Button(movieList.get(key).getInfo(i));
                 trueButton.getStyleClass().clear();
+                trueButton.opacityProperty().set(1.0);
+                trueButton.blendModeProperty().set(BlendMode.SRC_OVER);
                 trueButton.setStyle("-fx-background-color: green");
                 answerPane.getChildren().add(trueButton);
             } else {
                 Button falseButton = new Button(movieList.get(userKey).getInfo(i));
                 falseButton.getStyleClass().clear();
+                falseButton.opacityProperty().set(1.0);
+                falseButton.blendModeProperty().set(BlendMode.SRC_OVER);
                 falseButton.setStyle("-fx-background-color: red");
                 answerPane.getChildren().add(falseButton);
             }
         }
     }
 }
-
-
