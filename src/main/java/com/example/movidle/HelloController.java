@@ -5,12 +5,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.FlowPane;
+import javafx.util.Duration;
 
 public class HelloController {
 
@@ -37,7 +41,8 @@ public class HelloController {
     int randomMovieNumberKey;
     String userKey;
     String key;
-    boolean foundMatch;//eşleşme bulunup bulunmama durumu tutuluyor
+    boolean foundMatch; //eşleşme bulunup bulunmama durumu tutuluyor
+    int lives = 5;
 
     @FXML
     private FlowPane answerPane;
@@ -55,7 +60,6 @@ public class HelloController {
     void clickedButton() {
         // TODO: 24.06.2023 değerlerin eşleşme durumunu for döngüsü ile yaz
         String key = String.valueOf(randomMovieNumberKey);
-        System.out.println(movieList.get(key).getInfoCounter());
         this.key = key; //local variable ile method içi variable eşitlendi
         foundMatch = false;
 
@@ -73,22 +77,24 @@ public class HelloController {
             userKey = null;
             foundMatch = false;
         }
-        if (userKey != null) {
+        if (userKey != null && lives > 0) {
+            takeLives();
             compareMovieInfo();
         }
-
-        // TODO: 22.06.2023 tahmin button kullanıldıktan sonra database ile iletişim sağlanıp veriye göre 6 adet buton oluşturulacak buton sayısı tablonun sütununa bağlanacak
-        // TODO: 23.06.2023 getinfo methodları kullanarak girilen veri ile kıyaslama yap
         // TODO: 23.06.2023 textfield autocomple textfield
     }
 
     @FXML
     void initialize() throws IOException {
+        startingProgramAssets();
+        randomNumberCreator();
+        readDatabase();
+    }
+
+    private void startingProgramAssets() {
         assert clickButton != null : "fx:id=\"clickButton\" was not injected: check your FXML file 'hello-view.fxml'.";
         assert input != null : "fx:id=\"input\" was not injected: check your FXML file 'hello-view.fxml'.";
         assert alertLabel != null : "fx:id=\"output\" was not injected: check your FXML file 'hello-view.fxml'.";
-        randomNumberCreator();
-        readDatabase();
     }
 
     void randomNumberCreator() {
@@ -99,7 +105,7 @@ public class HelloController {
 
     void readDatabase() throws IOException {
         // TODO: 23.06.2023 büyük küçük harf uyumluluğu touppercase ve lowercase
-        // TODO: 23.06.2023 charset ayarla yabancı harfler için
+        // TODO: 23.06.2023 charset ayarla yabancı harfler için bu durum autocomplete textfield ile çözülecek
         String filePath = "./imdb_top_250.csv";
         BufferedReader databaseReader = new BufferedReader(new FileReader(filePath));
         String line;
@@ -138,6 +144,7 @@ public class HelloController {
     }
 
     void compareMovieInfo() {
+        SequentialTransition sequentialTransition = new SequentialTransition();
         for (int i = 0; i < movieList.get(key).getInfoCounter(); i++) {
             if (movieList.get(key).getInfo(i).equals(movieList.get(userKey).getInfo(i))) {
                 Button trueButton = new Button(movieList.get(key).getInfo(i));
@@ -146,6 +153,7 @@ public class HelloController {
                 trueButton.blendModeProperty().set(BlendMode.SRC_OVER);
                 trueButton.setStyle("-fx-background-color: green");
                 answerPane.getChildren().add(trueButton);
+                sequentialTransition.getChildren().add(fadeInTransitionEffect(trueButton));
             } else {
                 Button falseButton = new Button(movieList.get(userKey).getInfo(i));
                 falseButton.getStyleClass().clear();
@@ -153,7 +161,19 @@ public class HelloController {
                 falseButton.blendModeProperty().set(BlendMode.SRC_OVER);
                 falseButton.setStyle("-fx-background-color: red");
                 answerPane.getChildren().add(falseButton);
+                sequentialTransition.getChildren().add(fadeInTransitionEffect(falseButton));
             }
         }
+        sequentialTransition.play();
+    }
+
+    FadeTransition fadeInTransitionEffect(Button button) {
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(700), button);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+        return fadeIn;
+    }
+    void takeLives(){
+        lives--;
     }
 }
