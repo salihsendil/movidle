@@ -4,32 +4,50 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
 
-<BorderPane prefHeight="431.0" prefWidth="654.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.movidle.HelloController">
+<BorderPane prefHeight="510.0" prefWidth="774.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.movidle.HelloController">
    <center>
-      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="380.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="690.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="input" layoutX="111.0" layoutY="94.0" prefHeight="31.0" prefWidth="305.0" />
-            <Label alignment="CENTER" layoutX="220.0" layoutY="30.0" prefHeight="17.0" prefWidth="161.0" style="-fx-font-style: italic; -fx-font-weight: 900;" text="Movidle" textAlignment="CENTER" textFill="#da0000">
+            <TextField fx:id="input" layoutX="151.0" layoutY="70.0" prefHeight="31.0" prefWidth="305.0" />
+            <Label alignment="CENTER" layoutX="265.0" layoutY="14.0" prefHeight="17.0" prefWidth="161.0" style="-fx-font-style: italic; -fx-font-weight: 900;" text="Movidle" textAlignment="CENTER" textFill="#da0000">
                <font>
                   <Font name="Times New Roman" size="36.0" />
                </font>
             </Label>
-            <Label fx:id="alertLabel" alignment="CENTER" layoutX="148.0" layoutY="133.0" prefHeight="32.0" prefWidth="305.0" text="Label" textAlignment="CENTER">
+            <Label fx:id="alertLabel" alignment="CENTER" layoutX="193.0" layoutY="111.0" prefHeight="32.0" prefWidth="305.0" text="alertLabel" textAlignment="CENTER">
                <font>
                   <Font name="Dubai Bold" size="18.0" />
                </font>
             </Label>
-            <FlowPane fx:id="answerPane" layoutX="85.0" layoutY="200.0" prefHeight="155.0" prefWidth="431.0" snapToPixel="false" />
-            <Button fx:id="clickButton" layoutX="425.0" layoutY="95.0" mnemonicParsing="false" onMouseClicked="#clickedButton" prefHeight="30.0" prefWidth="70.0" text="Guess">
+            <Button fx:id="clickButton" layoutX="471.0" layoutY="71.0" mnemonicParsing="false" onMouseClicked="#clickedButton" prefHeight="30.0" prefWidth="70.0" text="Guess">
                <font>
                   <Font name="Cambria" size="16.0" />
                </font>
             </Button>
+            <GridPane fx:id="answersGridPane" alignment="CENTER" hgap="5.0" layoutX="56.0" layoutY="162.0" prefHeight="243.0" prefWidth="580.0" vgap="5.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
          </children>
       </Pane>
    </center>

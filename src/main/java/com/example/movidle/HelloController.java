@@ -14,6 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 public class HelloController {
@@ -42,10 +44,13 @@ public class HelloController {
     String userKey;
     String key;
     boolean foundMatch; //eşleşme bulunup bulunmama durumu tutuluyor
-    int lives = 5;
+    int testNumber = 0;
 
     @FXML
-    private FlowPane answerPane;
+    private Label alertLabel;
+
+    @FXML
+    private GridPane answersGridPane;
 
     @FXML
     private Button clickButton;
@@ -54,10 +59,9 @@ public class HelloController {
     private TextField input;
 
     @FXML
-    private Label alertLabel;
-
-    @FXML
     void clickedButton() {
+        System.out.println(answersGridPane.getRowConstraints());
+        System.out.println(answersGridPane.getColumnConstraints());
         // TODO: 24.06.2023 değerlerin eşleşme durumunu for döngüsü ile yaz
         String key = String.valueOf(randomMovieNumberKey);
         this.key = key; //local variable ile method içi variable eşitlendi
@@ -77,8 +81,8 @@ public class HelloController {
             userKey = null;
             foundMatch = false;
         }
-        if (userKey != null && lives > 0) {
-            takeLives();
+        if (userKey != null && testNumber < 5) {
+            addTestNumber();
             compareMovieInfo();
         }
         // TODO: 23.06.2023 textfield autocomple textfield
@@ -148,19 +152,25 @@ public class HelloController {
         for (int i = 0; i < movieList.get(key).getInfoCounter(); i++) {
             if (movieList.get(key).getInfo(i).equals(movieList.get(userKey).getInfo(i))) {
                 Button trueButton = new Button(movieList.get(key).getInfo(i));
-                trueButton.getStyleClass().clear();
+                //trueButton.getStyleClass().clear();
                 trueButton.opacityProperty().set(1.0);
                 trueButton.blendModeProperty().set(BlendMode.SRC_OVER);
                 trueButton.setStyle("-fx-background-color: green");
-                answerPane.getChildren().add(trueButton);
+                //trueButton.setPrefSize(answersGridPane.getColumnConstraints().get(i).getPrefWidth(),answersGridPane.getRowConstraints().get(testNumber).getPrefHeight());
+                trueButton.setWrapText(true);
+                trueButton.setTextAlignment(TextAlignment.CENTER);
+                answersGridPane.add(trueButton, i, testNumber);
                 sequentialTransition.getChildren().add(fadeInTransitionEffect(trueButton));
             } else {
                 Button falseButton = new Button(movieList.get(userKey).getInfo(i));
-                falseButton.getStyleClass().clear();
+                //falseButton.getStyleClass().clear();
                 falseButton.opacityProperty().set(1.0);
                 falseButton.blendModeProperty().set(BlendMode.SRC_OVER);
                 falseButton.setStyle("-fx-background-color: red");
-                answerPane.getChildren().add(falseButton);
+                //falseButton.setPrefSize(answersGridPane.getColumnConstraints().get(i).getPrefWidth(),answersGridPane.getRowConstraints().get(testNumber).getPrefHeight());
+                falseButton.setWrapText(true);
+                falseButton.setTextAlignment(TextAlignment.CENTER);
+                answersGridPane.add(falseButton, i, testNumber);
                 sequentialTransition.getChildren().add(fadeInTransitionEffect(falseButton));
             }
         }
@@ -173,7 +183,8 @@ public class HelloController {
         fadeIn.setToValue(1.0);
         return fadeIn;
     }
-    void takeLives(){
-        lives--;
+
+    void addTestNumber() {
+        testNumber++;
     }
 }
