@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="510.0" prefWidth="774.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.movidle.HelloController">
+<BorderPane prefHeight="510.0" prefWidth="774.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.movidle.MainClass">
    <center>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="690.0" BorderPane.alignment="CENTER">
          <children>
@@ -20,17 +20,17 @@
                   <Font name="Times New Roman" size="36.0" />
                </font>
             </Label>
-            <Label fx:id="alertLabel" alignment="CENTER" layoutX="193.0" layoutY="111.0" prefHeight="32.0" prefWidth="305.0" text="alertLabel" textAlignment="CENTER">
+            <Label fx:id="alertLabel" alignment="CENTER" layoutX="193.0" layoutY="111.0" prefHeight="32.0" prefWidth="305.0" textAlignment="CENTER">
                <font>
                   <Font name="Dubai Bold" size="18.0" />
                </font>
             </Label>
-            <Button fx:id="clickButton" layoutX="471.0" layoutY="71.0" mnemonicParsing="false" onMouseClicked="#clickedButton" prefHeight="30.0" prefWidth="70.0" text="Guess">
+            <Button fx:id="clickButton" layoutX="471.0" layoutY="71.0" mnemonicParsing="false" onMouseClicked="#ClickedButton" prefHeight="30.0" prefWidth="70.0" text="Guess">
                <font>
                   <Font name="Cambria" size="16.0" />
                </font>
             </Button>
-            <GridPane fx:id="answersGridPane" alignment="CENTER" hgap="5.0" layoutX="56.0" layoutY="162.0" prefHeight="269.0" prefWidth="580.0" vgap="5.0">
+            <GridPane fx:id="answersGridPane" alignment="CENTER" hgap="5.0" layoutX="56.0" layoutY="111.0" prefHeight="269.0" prefWidth="580.0" vgap="5.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -47,6 +47,28 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
+            <Pane fx:id="winPane" layoutX="160.0" layoutY="101.0" prefHeight="204.0" prefWidth="371.0" style="-fx-background-color: #25E100; -fx-background-radius: 75;" visible="false">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="64.0" layoutY="27.0" prefHeight="57.0" prefWidth="243.0" text="Kazandınız!" textAlignment="CENTER">
+                     <font>
+                        <Font name="Roboto Bold" size="32.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="winPlayAgainButton" layoutX="64.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#initialize" prefHeight="40.0" prefWidth="100.0" text="Yeniden Oyna" />
+                  <Button fx:id="winQuitButton" layoutX="207.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#ClickQuit" prefHeight="40.0" prefWidth="100.0" text="Çıkış" />
+               </children>
+            </Pane>
+            <Pane fx:id="losePane" layoutX="160.0" layoutY="101.0" prefHeight="204.0" prefWidth="371.0" style="-fx-background-color: #DE2400; -fx-background-radius: 75;" visible="false">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="64.0" layoutY="27.0" prefHeight="57.0" prefWidth="243.0" text="Kaybettiniz!" textAlignment="CENTER">
+                     <font>
+                        <Font name="Roboto Bold" size="32.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="losePlayAgainButton" layoutX="64.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#initialize" prefHeight="40.0" prefWidth="100.0" text="Yeniden Oyna" />
+                  <Button fx:id="loseQuitButton" layoutX="207.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#ClickQuit" prefHeight="40.0" prefWidth="100.0" text="Çıkış" />
+               </children>
+            </Pane>
          </children>
       </Pane>
    </center>

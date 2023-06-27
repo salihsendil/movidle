@@ -7,21 +7,19 @@ import java.util.*;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.effect.BlendMode;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
-public class HelloController {
+
+public class MainClass {
 
     static class MovieListMovieInfo {
         public String[] movieInfo;
@@ -43,12 +41,13 @@ public class HelloController {
     }
 
     HashMap<String, MovieListMovieInfo> movieList = new HashMap<>();
-    int randomMovieNumberKey;
     String userKey;
     String key;
     boolean foundMatch; //eşleşme bulunup bulunmama durumu tutuluyor
+    int randomMovieNumberKey;
     int testNumber = 0;
     int lives = 5;
+    int correctInfo = 0;
 
     @FXML
     private Label alertLabel;
@@ -63,7 +62,13 @@ public class HelloController {
     private TextField input;
 
     @FXML
-    void clickedButton() {
+    private Pane losePane;
+
+    @FXML
+    private Pane winPane;
+
+    @FXML
+    void ClickedButton() {
         String key = String.valueOf(randomMovieNumberKey);
         this.key = key; //local variable ile method içi variable eşitlendi
         foundMatch = false;
@@ -83,32 +88,44 @@ public class HelloController {
         }
         if (userKey != null && testNumber < lives) {
             addTestNumber();
-            compareMovieInfo();
+            CompareMovieInfo();
         }
         // TODO: 23.06.2023 textfield autocomple textfield
     }
 
     @FXML
     void initialize() throws IOException {
-        startingProgramAssets();
-        randomNumberCreator();
-        readDatabase();
+        winPane.setVisible(false); // TODO: 28.06.2023 methodlara ayrılabilir sonra
+        losePane.setVisible(false);
+        StartingProgramAssets();
+        RandomNumberCreator();
+        ReadDatabase();
+        ClearAllGridPaneCells();
     }
 
-    private void startingProgramAssets() {
+    public void ClickQuit() {
+        Alert logoutalert = new Alert(Alert.AlertType.CONFIRMATION);
+        logoutalert.setTitle("Çıkış");
+        logoutalert.setHeaderText("Çıkış Yap?");
+        logoutalert.setContentText("Gerçekten çıkmak istiyor musunuz?");
+        if (logoutalert.showAndWait().get() == ButtonType.OK)
+            Platform.exit();
+    }
+
+    private void StartingProgramAssets() {
         assert clickButton != null : "fx:id=\"clickButton\" was not injected: check your FXML file 'hello-view.fxml'.";
         assert input != null : "fx:id=\"input\" was not injected: check your FXML file 'hello-view.fxml'.";
         assert alertLabel != null : "fx:id=\"output\" was not injected: check your FXML file 'hello-view.fxml'.";
         assert answersGridPane != null : "fx:id=\"answerGridPane\" was not injected: check your FXML file 'hello-view.fxml'.";
     }
 
-    void randomNumberCreator() {
+    void RandomNumberCreator() {
         Random random = new Random();
         randomMovieNumberKey = random.nextInt(251);// TODO: 25.06.2023 sınırlamayı listenin uzunluğu ile değiştir +1 ekle
     }
 
 
-    void readDatabase() throws IOException {
+    void ReadDatabase() throws IOException {
         // TODO: 23.06.2023 büyük küçük harf uyumluluğu touppercase ve lowercase
         // TODO: 23.06.2023 charset ayarla yabancı harfler için bu durum autocomplete textfield ile çözülecek
         String filePath = "./imdb_top_250.csv";
@@ -125,7 +142,7 @@ public class HelloController {
             String info6 = data[6];
             movieList.put(key, new MovieListMovieInfo(info1, info2, info3, info4, info5, info6));
         }
-        removeTitleFromDatabase(); //liste okunduktan sonra tablonun başlıklarını sil
+        RemoveTitleFromDatabase(); //liste okunduktan sonra tablonun başlıklarını sil
         databaseReader.close();
 
         ///////////////////////////////////////////////////////////////////////////
@@ -144,57 +161,66 @@ public class HelloController {
         }
     }
 
-    void removeTitleFromDatabase() {
+    void RemoveTitleFromDatabase() {
         movieList.remove("No");
     }
 
-    void compareMovieInfo() {
+    void CompareMovieInfo() {
         SequentialTransition sequentialTransition = new SequentialTransition();
         Image upArrow = new Image(getClass().getResource("/img/up.png").toExternalForm());
         Image downArrow = new Image(getClass().getResource("/img/down.png").toExternalForm());
+        correctInfo = 0;
         for (int i = 0; i < movieList.get(key).getInfoCounter(); i++) {
-            Button button = createButtonSetOptionsAndAnimation(sequentialTransition, i);
+            Button button = CreateButtonSetOptionsAndAnimation(sequentialTransition, i);
             if (movieList.get(key).getInfo(i).equals(movieList.get(userKey).getInfo(i))) {
                 button.setText(movieList.get(key).getInfo(i));
                 button.setStyle("-fx-background-color: green");
+                correctInfo++;
             } else {
                 button.setText(movieList.get(userKey).getInfo(i));
                 button.setStyle("-fx-background-color: red");
                 if (i == 1) {
                     if (Integer.parseInt((movieList.get(key).getInfo(1))) > Integer.parseInt((movieList.get(userKey).getInfo(1)))) {
                         ImageView imageView = new ImageView(upArrow);
-                        yearImageArrowsOptions(imageView, button);
+                        YearImageArrowsOptions(imageView, button);
                     } else if (Integer.parseInt((movieList.get(key).getInfo(1))) < Integer.parseInt((movieList.get(userKey).getInfo(1)))) {
                         ImageView imageView = new ImageView(downArrow);
-                        yearImageArrowsOptions(imageView, button);
+                        YearImageArrowsOptions(imageView, button);
                     }
                 }
             }
         }
         sequentialTransition.play();
+        if (correctInfo >= 6) {
+            winPane.setVisible(true);
+
+        } // TODO: 28.06.2023 kazandınız veya kaybettiniz ekranına gecikme ekle animasyonlar tamamlandıktan sonra ekran gelsin
+        if (testNumber >= lives) {
+            losePane.setVisible(true);
+        }
     }
 
-    private Button createButtonSetOptionsAndAnimation(SequentialTransition sequentialTransition, int i) {
+    public Button CreateButtonSetOptionsAndAnimation(SequentialTransition sequentialTransition, int i) {
         Button button = new Button(movieList.get(key).getInfo(i));
         button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         GridPane.setFillHeight(button, true);
         GridPane.setFillWidth(button, true);
         button.setWrapText(true);
         button.setTextAlignment(TextAlignment.CENTER);
-        button.setStyle("-fx-font-weight: bolder");
+        button.setDisable(true);
         answersGridPane.add(button, i, testNumber);
-        sequentialTransition.getChildren().add(fadeInTransitionEffect(button));
+        sequentialTransition.getChildren().add(FadeInTransitionEffect(button));
         return button;
     }
 
-    FadeTransition fadeInTransitionEffect(Button button) {
+    FadeTransition FadeInTransitionEffect(Button button) {
         FadeTransition fadeIn = new FadeTransition(Duration.millis(700), button);
         fadeIn.setFromValue(0.0);
         fadeIn.setToValue(1.0);
         return fadeIn;
     }
 
-    private void yearImageArrowsOptions(ImageView imageView, Button button) {
+    private void YearImageArrowsOptions(ImageView imageView, Button button) {
         imageView.setOpacity(0.5);
         imageView.setFitWidth(35.0); // TODO: 27.06.2023 opacity hariç sabit ölçüler responsive yapıya çevrilecek
         imageView.setFitHeight(35.0);
@@ -204,5 +230,11 @@ public class HelloController {
 
     void addTestNumber() {
         testNumber++;
+    }
+
+    void ClearAllGridPaneCells() {
+        ObservableList answersGridPaneChildren = answersGridPane.getChildren();
+        answersGridPaneChildren.clear();
+        testNumber = 0;
     }
 }
