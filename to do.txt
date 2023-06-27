@@ -1,5 +1,6 @@
-ekran büyüklüğüne uyumlu sahne 
-
 tahmin eden textfield
 
-yeni buton sayısını manuel olarak değil veritabanının sütun sayısı olarak ayarla
+sağ tarafa film afişi ve film linki ekle linke tıklandığında siteye yönlendirme 
+
+
+

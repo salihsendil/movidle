@@ -10,9 +10,12 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlendMode;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
@@ -45,6 +48,7 @@ public class HelloController {
     String key;
     boolean foundMatch; //eşleşme bulunup bulunmama durumu tutuluyor
     int testNumber = 0;
+    int lives = 5;
 
     @FXML
     private Label alertLabel;
@@ -60,13 +64,9 @@ public class HelloController {
 
     @FXML
     void clickedButton() {
-        System.out.println(answersGridPane.getRowConstraints());
-        System.out.println(answersGridPane.getColumnConstraints());
-        // TODO: 24.06.2023 değerlerin eşleşme durumunu for döngüsü ile yaz
         String key = String.valueOf(randomMovieNumberKey);
         this.key = key; //local variable ile method içi variable eşitlendi
         foundMatch = false;
-
 
         // FIXME: 24.06.2023 büyük küçük harf duyarlılığı yok düzelt
         String tempUserKey = input.getText();
@@ -81,7 +81,7 @@ public class HelloController {
             userKey = null;
             foundMatch = false;
         }
-        if (userKey != null && testNumber < 5) {
+        if (userKey != null && testNumber < lives) {
             addTestNumber();
             compareMovieInfo();
         }
@@ -99,6 +99,7 @@ public class HelloController {
         assert clickButton != null : "fx:id=\"clickButton\" was not injected: check your FXML file 'hello-view.fxml'.";
         assert input != null : "fx:id=\"input\" was not injected: check your FXML file 'hello-view.fxml'.";
         assert alertLabel != null : "fx:id=\"output\" was not injected: check your FXML file 'hello-view.fxml'.";
+        assert answersGridPane != null : "fx:id=\"answerGridPane\" was not injected: check your FXML file 'hello-view.fxml'.";
     }
 
     void randomNumberCreator() {
@@ -149,32 +150,41 @@ public class HelloController {
 
     void compareMovieInfo() {
         SequentialTransition sequentialTransition = new SequentialTransition();
+        Image upArrow = new Image(getClass().getResource("/img/up.png").toExternalForm());
+        Image downArrow = new Image(getClass().getResource("/img/down.png").toExternalForm());
         for (int i = 0; i < movieList.get(key).getInfoCounter(); i++) {
+            Button button = createButtonSetOptionsAndAnimation(sequentialTransition, i);
             if (movieList.get(key).getInfo(i).equals(movieList.get(userKey).getInfo(i))) {
-                Button trueButton = new Button(movieList.get(key).getInfo(i));
-                //trueButton.getStyleClass().clear();
-                trueButton.opacityProperty().set(1.0);
-                trueButton.blendModeProperty().set(BlendMode.SRC_OVER);
-                trueButton.setStyle("-fx-background-color: green");
-                //trueButton.setPrefSize(answersGridPane.getColumnConstraints().get(i).getPrefWidth(),answersGridPane.getRowConstraints().get(testNumber).getPrefHeight());
-                trueButton.setWrapText(true);
-                trueButton.setTextAlignment(TextAlignment.CENTER);
-                answersGridPane.add(trueButton, i, testNumber);
-                sequentialTransition.getChildren().add(fadeInTransitionEffect(trueButton));
+                button.setText(movieList.get(key).getInfo(i));
+                button.setStyle("-fx-background-color: green");
             } else {
-                Button falseButton = new Button(movieList.get(userKey).getInfo(i));
-                //falseButton.getStyleClass().clear();
-                falseButton.opacityProperty().set(1.0);
-                falseButton.blendModeProperty().set(BlendMode.SRC_OVER);
-                falseButton.setStyle("-fx-background-color: red");
-                //falseButton.setPrefSize(answersGridPane.getColumnConstraints().get(i).getPrefWidth(),answersGridPane.getRowConstraints().get(testNumber).getPrefHeight());
-                falseButton.setWrapText(true);
-                falseButton.setTextAlignment(TextAlignment.CENTER);
-                answersGridPane.add(falseButton, i, testNumber);
-                sequentialTransition.getChildren().add(fadeInTransitionEffect(falseButton));
+                button.setText(movieList.get(userKey).getInfo(i));
+                button.setStyle("-fx-background-color: red");
+                if (i == 1) {
+                    if (Integer.parseInt((movieList.get(key).getInfo(1))) > Integer.parseInt((movieList.get(userKey).getInfo(1)))) {
+                        ImageView imageView = new ImageView(upArrow);
+                        yearImageArrowsOptions(imageView, button);
+                    } else if (Integer.parseInt((movieList.get(key).getInfo(1))) < Integer.parseInt((movieList.get(userKey).getInfo(1)))) {
+                        ImageView imageView = new ImageView(downArrow);
+                        yearImageArrowsOptions(imageView, button);
+                    }
+                }
             }
         }
         sequentialTransition.play();
+    }
+
+    private Button createButtonSetOptionsAndAnimation(SequentialTransition sequentialTransition, int i) {
+        Button button = new Button(movieList.get(key).getInfo(i));
+        button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        GridPane.setFillHeight(button, true);
+        GridPane.setFillWidth(button, true);
+        button.setWrapText(true);
+        button.setTextAlignment(TextAlignment.CENTER);
+        button.setStyle("-fx-font-weight: bolder");
+        answersGridPane.add(button, i, testNumber);
+        sequentialTransition.getChildren().add(fadeInTransitionEffect(button));
+        return button;
     }
 
     FadeTransition fadeInTransitionEffect(Button button) {
@@ -182,6 +192,14 @@ public class HelloController {
         fadeIn.setFromValue(0.0);
         fadeIn.setToValue(1.0);
         return fadeIn;
+    }
+
+    private void yearImageArrowsOptions(ImageView imageView, Button button) {
+        imageView.setOpacity(0.5);
+        imageView.setFitWidth(35.0); // TODO: 27.06.2023 opacity hariç sabit ölçüler responsive yapıya çevrilecek
+        imageView.setFitHeight(35.0);
+        button.setContentDisplay(ContentDisplay.CENTER);
+        button.setGraphic(imageView);
     }
 
     void addTestNumber() {
