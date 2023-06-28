@@ -3,7 +3,9 @@ package com.example.movidle;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
@@ -20,6 +22,18 @@ import javafx.util.Duration;
 
 
 public class MainClass {
+
+    ///////////////////////////////////////////////////////////////////////////
+    // database de bulunan yabancı dillerin alfabelerinin özel karakterlerini türkçe alfabeye uygun hale getirmek için ör: é = e
+    ///////////////////////////////////////////////////////////////////////////
+    public class MovieNamesConvertToTurkish {
+        public static String ConvertToTurkish(String filmAdi) {
+            String normalized = Normalizer.normalize(filmAdi, Normalizer.Form.NFD);
+            Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+            String turkishMovieName = pattern.matcher(normalized).replaceAll("");
+            return turkishMovieName;
+        }
+    }
 
     static class MovieListMovieInfo {
         public String[] movieInfo;
@@ -134,7 +148,7 @@ public class MainClass {
         while ((line = databaseReader.readLine()) != null) {
             String[] data = line.split(";");
             String key = data[0]; // ilk sütun = key
-            String info1 = data[1];
+            String info1 = MovieNamesConvertToTurkish.ConvertToTurkish(data[1]);
             String info2 = data[2];
             String info3 = data[3];
             String info4 = data[4];
@@ -144,6 +158,10 @@ public class MainClass {
         }
         RemoveTitleFromDatabase(); //liste okunduktan sonra tablonun başlıklarını sil
         databaseReader.close();
+
+        String ispanyolcaFilmAdi = "Yôjinbô";
+        String turkceIspanyolcaFilmAdi = MovieNamesConvertToTurkish.ConvertToTurkish(ispanyolcaFilmAdi);
+        System.out.println(turkceIspanyolcaFilmAdi); // Çıktı: El laberinto del fauno
 
         ///////////////////////////////////////////////////////////////////////////
         // rastgele üretilen sayıya göre listeden bir film seçip konsola yazdır İŞİN BİTİNCE SİL
@@ -191,13 +209,17 @@ public class MainClass {
             }
         }
         sequentialTransition.play();
-        if (correctInfo >= 6) {
-            winPane.setVisible(true);
+        sequentialTransition.setOnFinished(event -> {
+            if (correctInfo >= 6) {
+                winPane.setVisible(true);
+            }
+            if (testNumber >= lives) {
+                losePane.setVisible(true);
+            }
+        });
 
-        } // TODO: 28.06.2023 kazandınız veya kaybettiniz ekranına gecikme ekle animasyonlar tamamlandıktan sonra ekran gelsin
-        if (testNumber >= lives) {
-            losePane.setVisible(true);
-        }
+        // TODO: 28.06.2023 kazandınız veya kaybettiniz ekranına gecikme ekle animasyonlar tamamlandıktan sonra ekran gelsin
+
     }
 
     public Button CreateButtonSetOptionsAndAnimation(SequentialTransition sequentialTransition, int i) {

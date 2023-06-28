@@ -54,8 +54,8 @@
                         <Font name="Roboto Bold" size="32.0" />
                      </font>
                   </Label>
-                  <Button fx:id="winPlayAgainButton" layoutX="64.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#initialize" prefHeight="40.0" prefWidth="100.0" text="Yeniden Oyna" />
-                  <Button fx:id="winQuitButton" layoutX="207.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#ClickQuit" prefHeight="40.0" prefWidth="100.0" text="Çıkış" />
+                  <Button layoutX="64.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#initialize" prefHeight="40.0" prefWidth="100.0" text="Yeniden Oyna" />
+                  <Button layoutX="207.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#ClickQuit" prefHeight="40.0" prefWidth="100.0" text="Çıkış" />
                </children>
             </Pane>
             <Pane fx:id="losePane" layoutX="160.0" layoutY="101.0" prefHeight="204.0" prefWidth="371.0" style="-fx-background-color: #DE2400; -fx-background-radius: 75;" visible="false">
@@ -65,8 +65,8 @@
                         <Font name="Roboto Bold" size="32.0" />
                      </font>
                   </Label>
-                  <Button fx:id="losePlayAgainButton" layoutX="64.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#initialize" prefHeight="40.0" prefWidth="100.0" text="Yeniden Oyna" />
-                  <Button fx:id="loseQuitButton" layoutX="207.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#ClickQuit" prefHeight="40.0" prefWidth="100.0" text="Çıkış" />
+                  <Button layoutX="64.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#initialize" prefHeight="40.0" prefWidth="100.0" text="Yeniden Oyna" />
+                  <Button layoutX="207.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#ClickQuit" prefHeight="40.0" prefWidth="100.0" text="Çıkış" />
                </children>
             </Pane>
          </children>
