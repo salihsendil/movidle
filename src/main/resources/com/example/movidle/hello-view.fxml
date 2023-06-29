@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -14,7 +14,6 @@
    <center>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="690.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="input" layoutX="151.0" layoutY="70.0" prefHeight="31.0" prefWidth="305.0" />
             <Label alignment="CENTER" layoutX="265.0" layoutY="14.0" prefHeight="17.0" prefWidth="161.0" style="-fx-font-style: italic; -fx-font-weight: 900;" text="Movidle" textAlignment="CENTER" textFill="#da0000">
                <font>
                   <Font name="Times New Roman" size="36.0" />
@@ -25,7 +24,7 @@
                   <Font name="Dubai Bold" size="18.0" />
                </font>
             </Label>
-            <Button fx:id="clickButton" layoutX="471.0" layoutY="71.0" mnemonicParsing="false" onMouseClicked="#ClickedButton" prefHeight="30.0" prefWidth="70.0" text="Guess">
+            <Button fx:id="clickButton" layoutX="470.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#ClickedButton" prefHeight="38.0" prefWidth="80.0" text="Guess">
                <font>
                   <Font name="Cambria" size="16.0" />
                </font>
@@ -47,6 +46,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
+            <ComboBox fx:id="autoCompleteCombobox" editable="true" layoutX="160.0" layoutY="82.0" prefHeight="39.0" prefWidth="266.0" promptText="Film Adı..." />
             <Pane fx:id="winPane" layoutX="160.0" layoutY="101.0" prefHeight="204.0" prefWidth="371.0" style="-fx-background-color: #25E100; -fx-background-radius: 75;" visible="false">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="64.0" layoutY="27.0" prefHeight="57.0" prefWidth="243.0" text="Kazandınız!" textAlignment="CENTER">

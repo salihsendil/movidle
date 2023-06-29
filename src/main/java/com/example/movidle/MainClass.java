@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -26,7 +28,7 @@ public class MainClass {
     ///////////////////////////////////////////////////////////////////////////
     // database de bulunan yabancı dillerin alfabelerinin özel karakterlerini türkçe alfabeye uygun hale getirmek için ör: é = e
     ///////////////////////////////////////////////////////////////////////////
-    public class MovieNamesConvertToTurkish {
+    public static class MovieNamesConvertToTurkish {
         public static String ConvertToTurkish(String filmAdi) {
             String normalized = Normalizer.normalize(filmAdi, Normalizer.Form.NFD);
             Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
@@ -55,6 +57,8 @@ public class MainClass {
     }
 
     HashMap<String, MovieListMovieInfo> movieList = new HashMap<>();
+    ArrayList<String> comboboxMovieNames = new ArrayList<>();
+    ComboBox<String> comboBox = new ComboBox<>();
     String userKey;
     String key;
     boolean foundMatch; //eşleşme bulunup bulunmama durumu tutuluyor
@@ -70,27 +74,24 @@ public class MainClass {
     private GridPane answersGridPane;
 
     @FXML
-    private Button clickButton;
-
-    @FXML
-    private TextField input;
-
-    @FXML
     private Pane losePane;
 
     @FXML
     private Pane winPane;
 
     @FXML
+    private ComboBox<String> autoCompleteCombobox;
+
+
+    @FXML
     void ClickedButton() {
+        alertLabel.setText("");
         String key = String.valueOf(randomMovieNumberKey);
         this.key = key; //local variable ile method içi variable eşitlendi
         foundMatch = false;
-
-        // FIXME: 24.06.2023 büyük küçük harf duyarlılığı yok düzelt
-        String tempUserKey = input.getText();
+        String tempUserKey = comboBox.getEditor().getText().toLowerCase();
         movieList.forEach((s, movieNames) -> {
-            if (tempUserKey.equals(movieNames.getInfo(0))) {
+            if (tempUserKey.equals(movieNames.getInfo(0).toLowerCase())) {
                 userKey = s;
                 foundMatch = true;
             }
@@ -109,12 +110,21 @@ public class MainClass {
 
     @FXML
     void initialize() throws IOException {
-        winPane.setVisible(false); // TODO: 28.06.2023 methodlara ayrılabilir sonra
+        winPane.setVisible(false);
         losePane.setVisible(false);
-        StartingProgramAssets();
-        RandomNumberCreator();
+        comboBox = autoCompleteCombobox;
         ReadDatabase();
+        RandomNumberCreator();
+        TestMethod();
         ClearAllGridPaneCells();
+
+        comboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            String filteredValue = newValue.toLowerCase();
+            List<String> filteredItems = comboboxMovieNames.stream()
+                    .filter(item -> item.toLowerCase().contains(filteredValue))
+                    .collect(Collectors.toList());
+            comboBox.setItems(FXCollections.observableArrayList(filteredItems));
+        });
     }
 
     public void ClickQuit() {
@@ -126,22 +136,12 @@ public class MainClass {
             Platform.exit();
     }
 
-    private void StartingProgramAssets() {
-        assert clickButton != null : "fx:id=\"clickButton\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert input != null : "fx:id=\"input\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert alertLabel != null : "fx:id=\"output\" was not injected: check your FXML file 'hello-view.fxml'.";
-        assert answersGridPane != null : "fx:id=\"answerGridPane\" was not injected: check your FXML file 'hello-view.fxml'.";
-    }
-
     void RandomNumberCreator() {
         Random random = new Random();
-        randomMovieNumberKey = random.nextInt(251);// TODO: 25.06.2023 sınırlamayı listenin uzunluğu ile değiştir +1 ekle
+        randomMovieNumberKey = random.nextInt(movieList.size() + 1);
     }
 
-
     void ReadDatabase() throws IOException {
-        // TODO: 23.06.2023 büyük küçük harf uyumluluğu touppercase ve lowercase
-        // TODO: 23.06.2023 charset ayarla yabancı harfler için bu durum autocomplete textfield ile çözülecek
         String filePath = "./imdb_top_250.csv";
         BufferedReader databaseReader = new BufferedReader(new FileReader(filePath));
         String line;
@@ -155,16 +155,16 @@ public class MainClass {
             String info5 = data[5];
             String info6 = data[6];
             movieList.put(key, new MovieListMovieInfo(info1, info2, info3, info4, info5, info6));
+            comboboxMovieNames.add(info1);
         }
-        RemoveTitleFromDatabase(); //liste okunduktan sonra tablonun başlıklarını sil
+        RemoveTitleFromDatabase();
         databaseReader.close();
+        comboBox.getItems().addAll(FXCollections.observableArrayList(comboboxMovieNames));
+    }
 
-        String ispanyolcaFilmAdi = "Yôjinbô";
-        String turkceIspanyolcaFilmAdi = MovieNamesConvertToTurkish.ConvertToTurkish(ispanyolcaFilmAdi);
-        System.out.println(turkceIspanyolcaFilmAdi); // Çıktı: El laberinto del fauno
-
+    private void TestMethod() {
         ///////////////////////////////////////////////////////////////////////////
-        // rastgele üretilen sayıya göre listeden bir film seçip konsola yazdır İŞİN BİTİNCE SİL
+        // rastgele üretilen sayıya göre listeden bir film seçip konsola yazdır TEST AMAÇLI YAZILMIŞTIR
         ///////////////////////////////////////////////////////////////////////////
         String key = String.valueOf(randomMovieNumberKey);
         if (movieList.containsKey(key)) {
@@ -181,6 +181,7 @@ public class MainClass {
 
     void RemoveTitleFromDatabase() {
         movieList.remove("No");
+        comboboxMovieNames.remove("Title");
     }
 
     void CompareMovieInfo() {
@@ -190,7 +191,7 @@ public class MainClass {
         correctInfo = 0;
         for (int i = 0; i < movieList.get(key).getInfoCounter(); i++) {
             Button button = CreateButtonSetOptionsAndAnimation(sequentialTransition, i);
-            if (movieList.get(key).getInfo(i).equals(movieList.get(userKey).getInfo(i))) {
+            if (movieList.get(key).getInfo(i).toLowerCase().equals(movieList.get(userKey).getInfo(i).toLowerCase())) {// TODO: 29.06.2023 lowercase uppercase
                 button.setText(movieList.get(key).getInfo(i));
                 button.setStyle("-fx-background-color: green");
                 correctInfo++;
@@ -217,9 +218,6 @@ public class MainClass {
                 losePane.setVisible(true);
             }
         });
-
-        // TODO: 28.06.2023 kazandınız veya kaybettiniz ekranına gecikme ekle animasyonlar tamamlandıktan sonra ekran gelsin
-
     }
 
     public Button CreateButtonSetOptionsAndAnimation(SequentialTransition sequentialTransition, int i) {
