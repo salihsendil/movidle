@@ -55,6 +55,7 @@ public class MainClass {
         }
     }
 
+
     HashMap<String, MovieListMovieInfo> movieList = new HashMap<>();
     ArrayList<String> comboboxMovieNames = new ArrayList<>();
     ComboBox<String> comboBox = new ComboBox<>();
@@ -108,7 +109,6 @@ public class MainClass {
 
     @FXML
     void initialize() throws IOException {
-        comboboxMovieNames.clear();
         ReadDatabase();
         RestartGame();
     }
@@ -132,10 +132,9 @@ public class MainClass {
                 comboBox.setItems(FXCollections.observableArrayList(comboboxMovieNames));
             } else {
                 String filteredValue = newValue.toLowerCase();
-                List<String> filteredItems = comboboxMovieNames.stream()
-                        .filter(item -> item.toLowerCase().contains(filteredValue))
-                        .collect(Collectors.toList());
+                List<String> filteredItems = comboboxMovieNames.stream().filter(item -> item.toLowerCase().contains(filteredValue)).collect(Collectors.toList());
                 comboBox.setItems(FXCollections.observableArrayList(filteredItems));
+                comboBox.show();
             }
         });
     }
@@ -268,7 +267,8 @@ public class MainClass {
         logoutalert.setTitle("Çıkış");
         logoutalert.setHeaderText("Çıkış Yap?");
         logoutalert.setContentText("Gerçekten çıkmak istiyor musunuz?");
-        if (logoutalert.showAndWait().get() == ButtonType.OK)
+        if (logoutalert.showAndWait().get() == ButtonType.OK){
             Platform.exit();
+        }
     }
 }
