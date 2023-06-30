@@ -104,8 +104,9 @@ public class MainClass {
         if (userKey != null && testNumber < lives) {
             addTestNumber();
             CompareMovieInfo();
+            comboBox.getEditor().clear();
+
         }
-        // TODO: 23.06.2023 textfield autocomple textfield
     }
 
     @FXML
@@ -113,19 +114,29 @@ public class MainClass {
         winPane.setVisible(false);
         losePane.setVisible(false);
         comboBox = autoCompleteCombobox;
+        comboBox.getEditor().clear();
         ReadDatabase();
         RandomNumberCreator();
         TestMethod();
         ClearAllGridPaneCells();
+        ComboboxShowsFilteredValues();
+    }
 
+    public void ComboboxShowsFilteredValues() {
         comboBox.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
-            String filteredValue = newValue.toLowerCase();
-            List<String> filteredItems = comboboxMovieNames.stream()
-                    .filter(item -> item.toLowerCase().contains(filteredValue))
-                    .collect(Collectors.toList());
-            comboBox.setItems(FXCollections.observableArrayList(filteredItems));
+            if (newValue.isEmpty()) {
+                comboBox.getItems().clear();
+                comboBox.setItems(FXCollections.observableArrayList(comboboxMovieNames));
+            } else {
+                String filteredValue = newValue.toLowerCase();
+                List<String> filteredItems = comboboxMovieNames.stream()
+                        .filter(item -> item.toLowerCase().contains(filteredValue))
+                        .collect(Collectors.toList());
+                comboBox.setItems(FXCollections.observableArrayList(filteredItems));
+            }
         });
     }
+
 
     public void ClickQuit() {
         Alert logoutalert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -191,7 +202,7 @@ public class MainClass {
         correctInfo = 0;
         for (int i = 0; i < movieList.get(key).getInfoCounter(); i++) {
             Button button = CreateButtonSetOptionsAndAnimation(sequentialTransition, i);
-            if (movieList.get(key).getInfo(i).toLowerCase().equals(movieList.get(userKey).getInfo(i).toLowerCase())) {// TODO: 29.06.2023 lowercase uppercase
+            if (movieList.get(key).getInfo(i).toLowerCase().equals(movieList.get(userKey).getInfo(i).toLowerCase())) {
                 button.setText(movieList.get(key).getInfo(i));
                 button.setStyle("-fx-background-color: green");
                 correctInfo++;
@@ -213,9 +224,10 @@ public class MainClass {
         sequentialTransition.setOnFinished(event -> {
             if (correctInfo >= 6) {
                 winPane.setVisible(true);
-            }
-            if (testNumber >= lives) {
-                losePane.setVisible(true);
+            } else {
+                if (testNumber >= lives) {
+                    losePane.setVisible(true);
+                }
             }
         });
     }
@@ -242,7 +254,7 @@ public class MainClass {
 
     private void YearImageArrowsOptions(ImageView imageView, Button button) {
         imageView.setOpacity(0.5);
-        imageView.setFitWidth(35.0); // TODO: 27.06.2023 opacity hariç sabit ölçüler responsive yapıya çevrilecek
+        imageView.setFitWidth(35.0);
         imageView.setFitHeight(35.0);
         button.setContentDisplay(ContentDisplay.CENTER);
         button.setGraphic(imageView);
