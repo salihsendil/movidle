@@ -24,7 +24,6 @@ import javafx.util.Duration;
 
 
 public class MainClass {
-
     ///////////////////////////////////////////////////////////////////////////
     // database de bulunan yabancı dillerin alfabelerinin özel karakterlerini türkçe alfabeye uygun hale getirmek için ör: é = e
     ///////////////////////////////////////////////////////////////////////////
@@ -39,7 +38,6 @@ public class MainClass {
 
     static class MovieListMovieInfo {
         public String[] movieInfo;
-
         ///////////////////////////////////////////////////////////////////////////
         // static class constructor
         ///////////////////////////////////////////////////////////////////////////
@@ -61,12 +59,12 @@ public class MainClass {
     ComboBox<String> comboBox = new ComboBox<>();
     String userKey;
     String key;
-    boolean foundMatch; //eşleşme bulunup bulunmama durumu tutuluyor
     int randomMovieNumberKey;
+    boolean foundMatch; //eşleşme bulunup bulunmama durumu tutuluyor
+    int correctInfo = 0;
     int testNumber = 0;
     int lives = 5;
-    int correctInfo = 0;
-
+    
     @FXML
     private Label alertLabel;
 
@@ -81,7 +79,6 @@ public class MainClass {
 
     @FXML
     private ComboBox<String> autoCompleteCombobox;
-
 
     @FXML
     void ClickedButton() {
@@ -105,7 +102,6 @@ public class MainClass {
             addTestNumber();
             CompareMovieInfo();
             comboBox.getEditor().clear();
-
         }
     }
 
@@ -135,16 +131,6 @@ public class MainClass {
                 comboBox.setItems(FXCollections.observableArrayList(filteredItems));
             }
         });
-    }
-
-
-    public void ClickQuit() {
-        Alert logoutalert = new Alert(Alert.AlertType.CONFIRMATION);
-        logoutalert.setTitle("Çıkış");
-        logoutalert.setHeaderText("Çıkış Yap?");
-        logoutalert.setContentText("Gerçekten çıkmak istiyor musunuz?");
-        if (logoutalert.showAndWait().get() == ButtonType.OK)
-            Platform.exit();
     }
 
     void RandomNumberCreator() {
@@ -268,5 +254,14 @@ public class MainClass {
         ObservableList answersGridPaneChildren = answersGridPane.getChildren();
         answersGridPaneChildren.clear();
         testNumber = 0;
+    }
+
+    public void ClickQuit() {
+        Alert logoutalert = new Alert(Alert.AlertType.CONFIRMATION);
+        logoutalert.setTitle("Çıkış");
+        logoutalert.setHeaderText("Çıkış Yap?");
+        logoutalert.setContentText("Gerçekten çıkmak istiyor musunuz?");
+        if (logoutalert.showAndWait().get() == ButtonType.OK)
+            Platform.exit();
     }
 }
