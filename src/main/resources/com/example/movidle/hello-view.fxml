@@ -14,12 +14,12 @@
    <center>
       <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="690.0" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" layoutX="265.0" layoutY="14.0" prefHeight="17.0" prefWidth="161.0" style="-fx-font-style: italic; -fx-font-weight: 900;" text="Movidle" textAlignment="CENTER" textFill="#da0000">
+            <Label alignment="CENTER" layoutX="265.0" prefHeight="17.0" prefWidth="161.0" style="-fx-font-style: italic; -fx-font-weight: 900;" text="Movidle" textAlignment="CENTER" textFill="#da0000">
                <font>
                   <Font name="Times New Roman" size="36.0" />
                </font>
             </Label>
-            <Label fx:id="alertLabel" alignment="CENTER" layoutX="193.0" layoutY="111.0" prefHeight="32.0" prefWidth="305.0" textAlignment="CENTER">
+            <Label fx:id="alertLabel" alignment="CENTER" layoutX="193.0" layoutY="40.0" prefHeight="32.0" prefWidth="305.0" textAlignment="CENTER">
                <font>
                   <Font name="Dubai Bold" size="18.0" />
                </font>
@@ -55,7 +55,7 @@
                         <Font name="Roboto Bold" size="32.0" />
                      </font>
                   </Label>
-                  <Button layoutX="64.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#initialize" prefHeight="40.0" prefWidth="100.0" text="Yeniden Oyna" />
+                  <Button layoutX="64.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#RestartGame" prefHeight="40.0" prefWidth="100.0" text="Yeniden Oyna" />
                   <Button layoutX="207.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#ClickQuit" prefHeight="40.0" prefWidth="100.0" text="Çıkış" />
                </children>
             </Pane>
@@ -66,7 +66,7 @@
                         <Font name="Roboto Bold" size="32.0" />
                      </font>
                   </Label>
-                  <Button layoutX="64.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#initialize" prefHeight="40.0" prefWidth="100.0" text="Yeniden Oyna" />
+                  <Button layoutX="64.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#RestartGame" prefHeight="40.0" prefWidth="100.0" text="Yeniden Oyna" />
                   <Button layoutX="207.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#ClickQuit" prefHeight="40.0" prefWidth="100.0" text="Çıkış" />
                </children>
             </Pane>

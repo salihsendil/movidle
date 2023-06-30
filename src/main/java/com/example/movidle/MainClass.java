@@ -38,6 +38,7 @@ public class MainClass {
 
     static class MovieListMovieInfo {
         public String[] movieInfo;
+
         ///////////////////////////////////////////////////////////////////////////
         // static class constructor
         ///////////////////////////////////////////////////////////////////////////
@@ -64,7 +65,7 @@ public class MainClass {
     int correctInfo = 0;
     int testNumber = 0;
     int lives = 5;
-    
+
     @FXML
     private Label alertLabel;
 
@@ -107,11 +108,17 @@ public class MainClass {
 
     @FXML
     void initialize() throws IOException {
+        comboboxMovieNames.clear();
+        ReadDatabase();
+        RestartGame();
+    }
+
+    @FXML
+    void RestartGame() {
         winPane.setVisible(false);
         losePane.setVisible(false);
         comboBox = autoCompleteCombobox;
         comboBox.getEditor().clear();
-        ReadDatabase();
         RandomNumberCreator();
         TestMethod();
         ClearAllGridPaneCells();
